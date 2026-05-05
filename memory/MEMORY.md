@@ -4,6 +4,16 @@ Krátký kontextový log pro Claude Code, ať při příští session nemusí do
 
 ---
 
+## 2026-05-06 — Generátor end-to-end ověřený
+
+- GH repo `martin87pokorny/produktovy-feed-sidolux` (public), GH Pages enabled na `gh-pages` branch.
+- Workflow `Regenerate feeds` aktivní, manual run testovací produkt 5000013 prošel: 1 zařazen, validní XML pro CZ i SK na URL `https://martin87pokorny.github.io/produktovy-feed-sidolux/heureka_general_{cz,sk}.xml`. Patchback do AT `Feed_profile_index` přepsal status na OK.
+- Node 20 deprecation eliminovaná `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true` env var.
+- Drobné observace pro budoucí kroky:
+  - `IMGURL` zatím neexistuje v AT jako stabilní pole — defaultně mapováno na `Foto 800×800` attachment URL (provisional). Po Webflow CDN integraci přemapovat.
+  - SK profil přebírá hodnoty `PARAM` z CZ pole (`Vůně`, `Vhodné povrchy`, `Hlavní technologie`); pokud bude potřeba lokalizace hodnot pro SK odběratele, řešit přes nové AT pole nebo `value_map` v profilu.
+- AT Automation tlačítko zatím není napojené (jen návod v `docs/at_automation_setup.md`).
+
 ## 2026-05-05 — Multi-profile feed generator postavený
 
 - `scripts/feed/` knihovna: catalog, profile (extends), filters, transforms, renderer (CDATA, multi-IMGURL, PARAM), validator. Smoke test prošel.

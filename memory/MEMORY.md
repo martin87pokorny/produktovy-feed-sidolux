@@ -4,6 +4,19 @@ Krátký kontextový log pro Claude Code, ať při příští session nemusí do
 
 ---
 
+## 2026-05-05 — Multi-profile feed generator postavený
+
+- `scripts/feed/` knihovna: catalog, profile (extends), filters, transforms, renderer (CDATA, multi-IMGURL, PARAM), validator. Smoke test prošel.
+- `scripts/generate_feeds.py` entry point — args `--profile <name>|all`, `--list-profiles`, `--validate-only`, `--public-url-base`, `--skip-patchback`.
+- 2 default profily: `config/profiles/heureka_general_cz.json`, `heureka_general_sk.json`.
+- AT struktura:
+  - Pole `Feed profily` (multipleSelects) na `Produkty_v2`, `fldO4J5BZeby808uP`, choices: `heureka_general_cz`, `heureka_general_sk`. Prefilled u 141/141 aktivních produktů.
+  - Tabulka `Feed_profile_index` (`tblehtW7zV3HZlzU4`): Profil, Aktivní, Output URL, Posl. regenerace, Počet produktů, Status posl. běhu, Posl. log, Poznámka. Generátor sem patchuje stav po každém běhu.
+- `INTERNAL_FIELDS_BLOCKLIST` v `feed/catalog.py` připravený jako safety net (zatím prázdný).
+- GH workflow `.github/workflows/regenerate_feeds.yml` (cron 4h + workflow_dispatch s `profile` input). Deploy přes peaceiris/actions-gh-pages na branch `gh-pages`.
+- AT Automation návod v `docs/at_automation_setup.md` (fine-grained PAT s scope Actions write).
+- **Blokuje:** vytvoření GH repa `martin87pokorny/produktovy-feed-sidolux` čeká na explicitní souhlas Honzy s veřejnou viditelností. Po vytvoření taky doplnit `workflow` scope k `gh` PAT a pushnout `.github/workflows/`.
+
 ## 2026-05-05 — Heureka kategorie zapsané do AT
 
 - `scripts/import_heureka_categories.py` přepsal staré krátké cesty (`Drogerie | Úklid | …`) z `fill_feed_data.py` na nové plné cesty (`Heureka.cz | Drogerie | …`) z `heureka_category_import_2026-05-05.csv`.

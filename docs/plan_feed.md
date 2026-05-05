@@ -85,10 +85,22 @@ Produkty bez některého z těchto se vynechají + zaloguje varování do `data/
 
 ## Handoff pro další session
 
-- Heureka kategorizace zapsaná do AT (2026-05-05, `scripts/import_heureka_categories.py`, 142/142 verified).
-- Q Power `1014009` zůstává bez kategorie (vyřazen z feedu).
-- Low-confidence (`1011003`, `1011901`, `1011908`) zapsány s default „Univerzální čisticí prostředky"; Honza případně upraví ručně v AT.
-- Další blokátor: čeká se na vyplněný ceník od výrobce, pak `import_pricing.py` + generátor feedu.
+- Heureka kategorizace zapsaná do AT (2026-05-05, 142/142).
+- Generátor `scripts/generate_feeds.py` + `scripts/feed/` knihovna postavené, smoke test prošel.
+- 2 default profily (`heureka_general_cz`, `heureka_general_sk`) v `config/profiles/`.
+- AT připravena: `Feed profily` field + `Feed_profile_index` tabulka.
+- Generátor patchuje stav do `Feed_profile_index` po každém běhu — prozatím status `Warning` (0 produktů), důvod chybí ceny.
+- GH workflow `.github/workflows/regenerate_feeds.yml` připravený (cron 4h + workflow_dispatch).
+- AT Automation návod v `docs/at_automation_setup.md`.
+
+## Otevřené blokátory
+
+1. **GitHub repo nezaložen** — čeká na explicitní souhlas Honzy s veřejnou viditelností. Po souhlasu: `gh repo create martin87pokorny/produktovy-feed-sidolux --public --source=. --remote=origin --push`.
+2. **`gh` PAT chybí scope `workflow`** — bez toho nelze pushnout `.github/workflows/`. Refresh: `gh auth refresh -h github.com -s workflow`.
+3. **GitHub Secrets** v repu po jeho vytvoření: `AIRTABLE_TOKEN`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE_NAME`.
+4. **GitHub Pages** zapnout v Settings → Pages → Source: `gh-pages` branch.
+5. **Ceny od výrobce** + **Webflow CDN URL fotek** — bez nich proběhne feed s 0 produkty (status Warning), generátor je tomu připravený.
+6. **AT Automation** s fine-grained PAT podle `docs/at_automation_setup.md`.
 
 ---
 

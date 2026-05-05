@@ -15,7 +15,7 @@ Generování XML feedu pro **Heureka.cz** a **Heureka.sk** ze 143 produktů řad
 | **1. Struktura dat v Airtable** | ✅ hotová (URL, Itemgroup ID, EAN KS/KRT, Web slug) |
 | **1b. Heureka kategorizace** | ✅ zapsaná v AT (142/143, Q Power 1014009 vyřazen) |
 | **2. Doplnění cen + dalších údajů** | ⏳ odeslán Excel pro výrobce (`data/exchange/cenik_pro_vyrobce_*.xlsx`), čeká se na vyplnění |
-| **3. Generátor feedu** | 🔜 po doplnění cen |
+| **3. Generátor feedu** | ⏳ multi-profile knihovna + 2 default profily hotové, čeká na ceny + Webflow CDN URL |
 | **4. Hosting + automatický refresh** | 🔜 |
 
 Detailní plán v [`docs/plan_feed.md`](docs/plan_feed.md).

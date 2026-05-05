@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<SHOP>
+  <SHOPITEM>
+    <ITEM_ID>5000013</ITEM_ID>
+    <PRODUCTNAME>SIDOLUX Universal Marseille soap lavender vzorek 35 ml</PRODUCTNAME>
+    <URL>https://www.sidolux.cz/cs-cz/produkty/sidolux-universal-marseille-soap-lavender-vzorek-35ml</URL>
+    <PRICE_VAT>15.00</PRICE_VAT>
+    <VAT>21%</VAT>
+    <CATEGORYTEXT>Heureka.cz | Drogerie | Čisticí prostředky | Univerzální čisticí prostředky</CATEGORYTEXT>
+    <DESCRIPTION><![CDATA[Vzorek Sidolux Universal Marseille Soap &amp; Lavender v miniaturním 35ml balení je ideální způsob, jak si nezávazně vyzkoušet harmonické spojení klasické vůně marseillského mýdla s uklidňujícím aroma levandule. Vzorek obsahuje stejný univerzální čisticí prostředek jako 1litrová verze – snadno si tedy ověříte nejen vůni, ale i způsob použití a celkový dojem po úklidu.
+
+Přípravek je vhodný na podlahy, dlažbu, lino, vinyl i další omyvatelné tvrdé povrchy a po úklidu navodí příjemnou atmosféru čistoty s lehkým bylinkovým podtónem levandule. Po vyzkoušení vzorku snadno přejdete na ekonomicky výhodnější 1L balení.]]></DESCRIPTION>
+    <EAN>5902986217647</EAN>
+    <MANUFACTURER>Lakma</MANUFACTURER>
+    <ITEMGROUP_ID>sidolux-universal-35ml</ITEMGROUP_ID>
+    <DELIVERY_DATE>0</DELIVERY_DATE>
+    <PARAM>
+      <PARAM_NAME>Vůně</PARAM_NAME>
+      <VAL>marseillské mýdlo s levandulí</VAL>
+    </PARAM>
+    <PARAM>
+      <PARAM_NAME>Objem</PARAM_NAME>
+      <VAL>35ml</VAL>
+    </PARAM>
+  </SHOPITEM>
+</SHOP>

@@ -46,12 +46,101 @@ html = f'''<!doctype html>
 <meta charset="utf-8">
 <title>Sidolux/Lakma — produktové feedy</title>
 <style>
-  body {{ font-family: system-ui, sans-serif; max-width: 960px; margin: 2rem auto; padding: 0 1rem; }}
-  table {{ border-collapse: collapse; width: 100%; margin-top: 1rem; }}
-  th, td {{ text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd; }}
-  th {{ background: #f5f5f5; }}
-  code {{ background: #f0f0f0; padding: 0.1rem 0.3rem; border-radius: 3px; }}
-  .meta {{ color: #666; font-size: 0.9rem; }}
+  :root {{
+    --fg: #111;
+    --muted: #666;
+    --line: #e5e5e5;
+    --bg: #fff;
+    --accent: #0a0a0a;
+  }}
+  * {{ box-sizing: border-box; }}
+  body {{
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--fg);
+    background: var(--bg);
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 0;
+    line-height: 1.55;
+  }}
+  h1 {{ font-size: 1.75rem; font-weight: 700; margin: 0 0 0.25rem; letter-spacing: -0.02em; }}
+  .meta {{ color: var(--muted); font-size: 0.875rem; margin: 0 0 2rem; }}
+  p {{ margin: 0 0 1rem; }}
+  a {{ color: var(--fg); text-decoration: underline; text-underline-offset: 2px; }}
+  a:hover {{ text-decoration-thickness: 2px; }}
+  table {{
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 1.5rem;
+    font-size: 0.9375rem;
+  }}
+  th, td {{ text-align: left; padding: 0.65rem 0.5rem; border-bottom: 1px solid var(--line); }}
+  th {{
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: 600;
+    border-bottom: 1px solid var(--fg);
+  }}
+  td code {{
+    font-family: "JetBrains Mono", ui-monospace, "Cascadia Code", Menlo, monospace;
+    font-size: 0.875rem;
+    background: #f6f6f6;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+  }}
+  .footer {{
+    margin: 5rem 0 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--fg);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }}
+  .footer-brand {{
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    text-decoration: none;
+    color: var(--fg);
+  }}
+  .wordmark {{
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 2.25rem;
+    letter-spacing: 0.18em;
+    line-height: 1;
+    color: var(--accent);
+  }}
+  .tagline {{
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--muted);
+    font-weight: 500;
+  }}
+  .footer-meta {{
+    text-align: right;
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }}
+  .footer-meta a {{ color: var(--fg); }}
+  .footer-meta .label {{
+    display: block;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    margin-bottom: 0.1rem;
+  }}
+  @media (max-width: 540px) {{
+    .footer {{ flex-direction: column; align-items: flex-start; }}
+    .footer-meta {{ text-align: left; }}
+  }}
 </style>
 </head>
 <body>
@@ -66,7 +155,18 @@ html = f'''<!doctype html>
       {chr(10).join(rows)}
     </tbody>
   </table>
-  <p class="meta">Provozuje <a href="https://drogeriezde.cz">Drogerie ZDE</a> · kontakt: honza@drogeriezde.cz</p>
+
+  <footer class="footer">
+    <a class="footer-brand" href="https://gby.agency">
+      <span class="wordmark">GBY</span>
+      <span class="tagline">digital agency</span>
+    </a>
+    <div class="footer-meta">
+      <span class="label">Vytvořilo</span>
+      <a href="https://gby.agency">gby.agency</a><br>
+      <a href="mailto:martin@gby.agency">martin@gby.agency</a>
+    </div>
+  </footer>
 </body>
 </html>
 '''

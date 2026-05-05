@@ -4,6 +4,31 @@ Krátký kontextový log pro Claude Code, ať při příští session nemusí do
 
 ---
 
+## 2026-05-06 — Session uzavřena, MVP technicky hotové
+
+Po Sprint 1 jsme uzavřeli session. MVP feedu je hotové, čeká pouze na vstupní data.
+
+**Hotovo (lze spustit a pojede):**
+- AT struktura + 141/141 prefilled `Feed profily` + Heureka kategorie 142/142
+- Multi-profile generátor + 2 default profily (`heureka_general_{cz,sk}`)
+- GH repo `martin87pokorny/produktovy-feed-sidolux` (public), GH Pages live
+- Workflow `regenerate_feeds.yml` (cron 4h + manual), Job summary, failure notify
+- Patchback do `Feed_profile_index` po každém běhu (status OK/Warning/Error)
+- Importer ceníku (`scripts/import_pricing.py`) ověřený test fixture
+- Branding GBY (Parkinsans, navy/cream, inline SVG logo)
+- Dokumentace pro odběratele `docs/feeds_for_partners.md`
+
+**Čeká:**
+- Ceník od výrobce → `python scripts/import_pricing.py <xlsx> --dry-run` → naostro → workflow run
+- Webflow CDN URL fotek → přidat AT pole `Foto URL CZ/SK` → změnit profil mapping z attachment na URL → workflow run
+- AT Automation tlačítko (fine-grained PAT, návod v `docs/at_automation_setup.md`) — Honza dodá PAT
+- První custom B2B profil (až přijde reálný odběratel)
+- Custom doména `feed.sidolux.cz` (po MVP)
+
+**Aktuální feedy (sample s testovacím produktem 5000013):**
+- <https://martin87pokorny.github.io/produktovy-feed-sidolux/heureka_general_cz.xml>
+- <https://martin87pokorny.github.io/produktovy-feed-sidolux/heureka_general_sk.xml>
+
 ## 2026-05-06 — Sprint 1: importer ceníku + monitoring + partner docs
 
 - `scripts/import_pricing.py` — read Excel ceníku, počítá cenu s DPH = bez DPH × (1+sazba/100), match na Kód Lakma, default live, batch 10, dry-run preview, retry 429. Ověřeno test fixture (5000013 detekoval beze změny, 1010166 nově) — fixture v `_TEST_*.xlsx` patternu v `.gitignore`.
@@ -79,11 +104,13 @@ Krátký kontextový log pro Claude Code, ať při příští session nemusí do
 ## Co je hotové (data v Airtable)
 
 - ✅ 143/143: Kód Lakma, Web název CZ, Web název SK, Web slug, URL produktu CZ, URL produktu SK, EAN KS, EAN KRT (s `NA` pro 5 produktů bez kartonu/kódů), Web popis CZ, Web popis SK, Web benefity CZ/SK, Web tipy CZ/SK
-- ✅ připraveno k importu: Heureka kategorie CZ, Heureka kategorie SK pro 142 produktů; `1014009` vyřazen
+- ✅ 142/143 zapsáno: Heureka kategorie CZ + SK; `1014009` vyřazen
 - ✅ 117/143: Itemgroup ID
-- ⏳ 0/143: Cena CZK doporučená, Cena EUR doporučená — čeká se na výrobce
+- ✅ 141/141 aktivních: `Feed profily` multi-select (`heureka_general_cz` + `heureka_general_sk`)
+- ✅ 1/143: Cena CZK + EUR doporučená (testovací 5000013)
+- ⏳ 140/143: Cena CZK + EUR doporučená — čeká se na výrobce
 - ⏳ 0/143: Foto URL (Webflow CDN řeší web tým)
-- ⏳ 0/143: MPN, Země původu, PAO, Záruka — výrobce vyplní v Excelu
+- ⏳ 0/143: MPN, Země původu, PAO, Záruka — výrobce vyplní v Excelu (AT pole zatím nejsou, přidají se až dorazí)
 
 ## Důležitá pravidla práce
 
@@ -95,7 +122,13 @@ Krátký kontextový log pro Claude Code, ať při příští session nemusí do
 
 ## Otevřené otázky / blokátory
 
-1. **Ceny od výrobce** (Excel) — bez nich nelze publikovat feed
-2. **Webflow CDN** Foto URL — web tým musí publikovat fotky a vrátit URL pattern
-3. **Heureka kategorie** — připravené k importu do AT; před zápisem zkontrolovat `1011003`, `1011901`, `1011908`
-4. **Konfigurace dopravy** — DELIVERY_ID + ceny pro Heureka tag DELIVERY
+1. **Ceny od výrobce** (Excel) — bez nich nelze publikovat ostrý feed; importer připravený (`scripts/import_pricing.py`)
+2. **Webflow CDN** Foto URL — web tým musí publikovat fotky a vrátit URL pattern; pak přidat AT pole `Foto URL CZ/SK` a přemapovat profil
+3. **AT Automation tlačítko** — Honza musí dodat fine-grained PAT (Actions:write na repo); pak napojit podle `docs/at_automation_setup.md`
+4. **Low-confidence Heureka kategorie** (`1011003`, `1011901`, `1011908`) — zapsané s default „Univerzální čisticí prostředky", Honza případně doupraví ručně v AT
+5. **Custom doména** `feed.sidolux.cz` — odložené po MVP
+
+**Rozhodnuto (z 2026-05-06 — neřešit):**
+- `<DELIVERY>` ve feedu zůstane prázdný (B2B, ne e-shop)
+- SK PARAM hodnoty zatím v češtině (kosmetické)
+- Testovací 5000013 zůstává jako sample

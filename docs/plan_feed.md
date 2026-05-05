@@ -1,43 +1,145 @@
-# Plán produktového feedu — Heureka.cz + Heureka.sk
+# Plán produktového feedu
 
-> Stav k 2026-05-05. Aktualizuj při každém větším posunu.
+> Stav k **2026-05-06**. MVP technicky hotové, čeká na vstupní data.
+> Aktualizuj při každém větším posunu.
 
 ## Cíl
 
-Generovat XML feed pro **Heureka.cz** a **Heureka.sk** ze 143 produktů řady Sidolux. Klient (Lakma) není e-shop — ceny jsou pouze doporučené MOC pro porovnávač.
+Generovat XML produktové feedy ze 143 SKU řady Sidolux pro **B2B odběratele**.
+Default formát = **Heureka XML Feed** (široká kompatibilita s odběratelskými
+systémy), ale architektura je multi-profile — jeden katalog produktů v AT,
+N profilů v `config/profiles/*.json`, N XML výstupů per běh. Custom profily
+pro konkrétní odběratele se přidávají jako další JSON.
+
+Klient (Lakma) **není e-shop** — ceny jsou doporučené MOC, dopravu si řeší
+odběratel sám (paletová přeprava z centrálního skladu).
 
 ---
 
-## Mapování Heureka tag → Airtable Produkty_v2
+## Architektura
 
-| Heureka tag | Povinné? | Airtable | Stav |
-|-------------|----------|----------|------|
+```
+       ┌──────────────────────────┐
+       │  Airtable Produkty_v2    │   ← single source of truth
+       └────────────┬─────────────┘
+                    │ scripts/feed/catalog.py
+                    ▼
+       ┌──────────────────────────┐
+       │  ProductCatalog          │   ← 143× Product objekt
+       └────────────┬─────────────┘
+                    │
+        ┌───────────┼─────────────┐
+        ▼           ▼             ▼
+   Profil A    Profil B      Custom profil
+   heureka_    heureka_      odberatel_X
+   general_cz  general_sk    (až bude potřeba)
+        │           │             │
+        ▼           ▼             ▼
+       .xml        .xml          .xml
+```
+
+- **Generátor (`scripts/feed/`)** je generic — pracuje s `Product` a `Profile`, ničemu v doméně se nerozhoduje.
+- **Profily (`config/profiles/*.json`)** drží logiku — filter, mapping, transformace, extras. Přidání odběratele = přidání jednoho JSON.
+- **AT pole `Feed profily`** (multipleSelects) na produktu rozhoduje, do kterých profilů produkt patří.
+- **AT tabulka `Feed_profile_index`** je dashboard — generátor sem patchuje status po každém běhu.
+
+Detail viz `scripts/feed/{catalog,profile,filters,transforms,renderer,validator}.py`.
+
+---
+
+## Mapování Heureka tag → Airtable Produkty_v2 (default profil)
+
+| Heureka tag | Povinné? | AT pole | Stav |
+|-------------|----------|---------|------|
 | ITEM_ID | ✓ | Kód Lakma | ✅ 143/143 |
 | PRODUCTNAME | ✓ | Web název CZ / SK | ✅ 143/143 |
 | URL | ✓ | URL produktu CZ / SK | ✅ 143/143 |
-| PRICE_VAT | ✓ | Cena CZK doporučená / Cena EUR doporučená | ⏳ čeká na výrobce |
-| DESCRIPTION | doporučeno | Web popis CZ / SK | ✅ |
-| CATEGORYTEXT | doporučeno | Heureka kategorie CZ / SK | ✅ zapsáno v AT: 142/143, `1014009` vyřazen |
-| IMGURL | doporučeno | Foto 800×800 → Webflow CDN | ⏳ Webflow CDN |
-| IMGURL_ALTERNATIVE | volitelné | Galerie produktu → Webflow CDN | ⏳ |
+| PRICE_VAT | ✓ | Cena CZK / EUR doporučená | ⏳ čeká na ceník |
+| DESCRIPTION | doporučeno | Web popis CZ / SK | ✅ 143/143 |
+| CATEGORYTEXT | doporučeno | Heureka kategorie CZ / SK | ✅ 142/143 v AT (1014009 vyřazen) |
+| IMGURL | doporučeno | `Foto 800×800` (provisional) → Webflow CDN | ⏳ |
+| IMGURL_ALTERNATIVE | volitelné | `Galerie produktu` → Webflow CDN | ⏳ |
 | EAN | povinné pro chemii | EAN KS | ✅ (2× NA) |
-| MANUFACTURER | doporučeno | konstanta `Lakma` (config) | ✅ |
-| PRODUCTNO | volitelné | MPN / Kód výrobce (z Excelu) | ⏳ |
-| PARAM | doporučeno | Vůně, Objem, Vhodné povrchy, Hlavní technologie | ✅ |
-| ITEMGROUP_ID | doporučeno (varianty) | Itemgroup ID | ✅ 117/143 (zbylých 26 jsou solitéři) |
-| DELIVERY_DATE | doporučeno | konstanta `0` (config) | ✅ |
-| DELIVERY | doporučeno | konfig feed | ⏳ |
-| VAT | volitelné | Sazba DPH CZ/SK (z Excelu) | ⏳ |
+| MANUFACTURER | doporučeno | konstanta `Lakma` | ✅ |
+| PRODUCTNO | volitelné | MPN (z Excelu) | ⏳ čeká, AT pole zatím není |
+| PARAM | doporučeno | Vůně, Objem, Vhodné povrchy, Hlavní technologie | ✅ částečně |
+| ITEMGROUP_ID | doporučeno | Itemgroup ID | ✅ 117/143 (zbylých 26 jsou solitéři) |
+| DELIVERY_DATE | doporučeno | konstanta `0` | ✅ |
+| DELIVERY | doporučeno | — | ❌ záměrně prázdné (B2B feed) |
+| VAT | volitelné | konstanta `21%` (CZ) / `23%` (SK) | ✅ |
+
+---
+
+## Filtrace produktu do feedu
+
+Profil `heureka_general_cz` (analogicky SK) zařadí produkt, jen když platí
+**všechno**:
+
+1. `Přidat do feedu = "Ano"` (Honza ručně přepíná)
+2. `Feed profily` obsahuje `heureka_general_cz` (resp. `_sk`)
+3. Vyplněné `URL produktu CZ` (resp. SK)
+4. Vyplněná `Cena CZK doporučená` (resp. `Cena EUR doporučená`)
+5. Vyplněná `Heureka kategorie CZ` (resp. SK)
+6. Validní EAN KS (8/12/13/14 číslic, ne `NA`)
+
+Vynechané produkty se logují do `data/output/feed_warnings_<profile>_<ts>.log`.
 
 ---
 
 ## Itemgroup ID pravidlo
 
-`{slug-řady}-{objem}` — pro produkty kde se liší jen vůně. Např. všech 21 vůní `Sidolux Universal 1000ml` má hodnotu `sidolux-universal-1000ml`. Heureka pak nabízí selektor vůně na 1 produkt. stránce.
+`{slug-řady}-{objem}` pro produkty, kde se liší jen vůně. Např. všech 21 vůní
+`Sidolux Universal 1000ml` má hodnotu `sidolux-universal-1000ml`. Heureka pak
+nabízí selektor vůně na 1 produkt. stránce.
 
 ---
 
-## Heureka kategorie — mapování řad (12 řad)
+## Hosting + automatický refresh
+
+- **Repo:** [`martin87pokorny/produktovy-feed-sidolux`](https://github.com/martin87pokorny/produktovy-feed-sidolux) (public)
+- **Hosting:** GitHub Pages, branch `gh-pages`
+- **URL:** <https://martin87pokorny.github.io/produktovy-feed-sidolux/>
+- **Workflow:** `.github/workflows/regenerate_feeds.yml`
+  - Cron `0 */4 * * *` (každé 4 hodiny — minimum, které Heureka tolerovala)
+  - `workflow_dispatch` s `profile` inputem (`all` / konkrétní jméno)
+  - Job summary v Actions UI po každém běhu
+  - `if: failure()` step → patchne všechny záznamy v `Feed_profile_index` na status `Error` s odkazem na run
+- **Secrets v repu:** `AIRTABLE_TOKEN`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE_NAME`
+- **Custom doména** `feed.sidolux.cz` — odložené na po MVP
+
+---
+
+## Otevřené blokátory (čeká na vstupní data)
+
+| # | Co | Vlastník | Stav |
+|---|----|---------|------|
+| 1 | Vyplněný ceník v Excelu | výrobce / Lakma PL | odesláno 2026-05-05, čeká |
+| 2 | Webflow CDN URL fotek | web tým | čeká |
+| 3 | AT pole `Foto URL CZ` / `Foto URL SK` (přidat až dorazí Webflow) | feed projekt | po doručení URL pattern |
+| 4 | AT Automation tlačítko (fine-grained PAT) | Honza + feed projekt | návod v `docs/at_automation_setup.md` |
+| 5 | První custom B2B profil pro reálného odběratele | feed projekt | až přijde požadavek |
+| 6 | Heureka feed-validator manuální test | Honza | URL feedu už máme, kdykoli |
+
+---
+
+## Co dál (po doručení ceníku)
+
+1. `python scripts/import_pricing.py data/exchange/cenik_VYPLNENY_*.xlsx --dry-run` → review
+2. Naostro → 141× cena v AT
+3. `gh workflow run regenerate_feeds.yml` (nebo počkat na cron)
+4. Stáhnout XML z GH Pages, validovat přes [Heureka feed-validator](https://sluzby.heureka.cz/sluzby/feed-validator/)
+5. Případně doladit 3 low-confidence Heureka kategorie (`1011003`, `1011901`, `1011908`)
+
+## Co dál (po doručení Webflow URL)
+
+1. Přidat AT pole `Foto URL CZ` / `Foto URL SK` (singleLineText URL)
+2. Hromadně doplnit URL z Webflow (skript / manuální import)
+3. Změnit v profilech `IMGURL` source z `Foto 800×800` → `Foto URL CZ`/`Foto URL SK`
+4. `gh workflow run` → IMGURL bude stabilní URL
+
+---
+
+## Heureka kategorie — mapování řad (pro referenci)
 
 | Řada | CZ | SK |
 |------|-----|-----|
@@ -47,91 +149,23 @@ Generovat XML feed pro **Heureka.cz** a **Heureka.sk** ze 143 produktů řady Si
 | Sidolux PREMIUM FLOOR CARE | Heureka.cz \| Drogerie \| Čisticí prostředky \| Čistící prostředky na podlahy | Heureka.sk \| Drogéria \| Čistiace prostriedky \| Čistiace prostriedky na podlahy |
 | Sidolux WINDOW | Heureka.cz \| Drogerie \| Čisticí prostředky \| Čistící prostředky na okna a skla | Heureka.sk \| Drogéria \| Čistiace prostriedky \| Čistiace prostriedky na okná a sklá |
 | Sidolux M péče o nábytek | Heureka.cz \| Drogerie \| Čisticí prostředky \| Leštící prostředky \| Leštidla na nábytek a přípravky proti prachu | Heureka.sk \| Drogéria \| Čistiace prostriedky \| Leštiace prostriedky \| Leštidlá na nábytok a prípravky proti prachu |
-| Sidolux PROFESSIONAL | mix podle názvu: univerzální / koupelna+kuchyně / odpady / kamna+krby | mix podle názvu: univerzální / kúpeľne+kuchyne / odpady |
-| Sidolux Praní + PERLUX | mix podle názvu: odstraňovače skvrn / prací gely / kapsle / aviváže / aditiva | mix podle názvu: odstraňovače škvŕn / pracie gély / kapsule / aviváže / aditíva |
+| Sidolux PROFESSIONAL | mix podle názvu | mix podle názvu |
+| Sidolux Praní + PERLUX | mix podle názvu (gely / kapsle / aviváže / odstraňovače) | mix podle názvu |
 | MR. TEPPICH | Heureka.cz \| Drogerie \| Čisticí prostředky \| Čisticí prostředky na koberce a čalounění | Heureka.sk \| Drogéria \| Čistiace prostriedky \| Čistiace prostriedky na koberce a čalúnenie |
 | SILUX WC | Heureka.cz \| Drogerie \| Čisticí prostředky \| Dezinfekční prostředky na WC | Heureka.sk \| Drogéria \| Čistiace prostriedky \| Dezinfekčné prostriedky na WC |
-| Silux | mix podle názvu: houbičky / utěrky / nábytek | mix podle názvu: hubky / utierky / nábytok |
+| Silux | mix podle názvu (houbičky / utěrky / nábytek) | mix podle názvu |
 
-Detailní mapování a generování review/import souborů: [`docs/heureka_categories.md`](heureka_categories.md).
-Q Power `1014009` je z kategorizace vyřazený.
-
----
-
-## Filtrování feedu
-
-Generátor zařadí produkt do feedu právě tehdy, když:
-- `Přidat do feedu` = `"Ano"` *(Honza ručně přepíná v Airtable)*
-- AND `Cena CZK doporučená` (resp. `Cena EUR doporučená` pro SK feed) je vyplněná
-- AND `Foto URL` je dostupné (po Webflow CDN integraci)
-- AND `Heureka kategorie CZ` (resp. SK) je vyplněná
-
-Produkty bez některého z těchto se vynechají + zaloguje varování do `data/output/feed_warnings_*.log`.
+Detailní mapování v [`docs/heureka_categories.md`](heureka_categories.md). Q Power `1014009` z kategorizace vyřazen.
 
 ---
 
-## Otevřené úkoly (Fáze 2)
+## Souhrnný stav fází
 
-| # | Úkol | Vlastník | Stav |
-|---|------|---------|------|
-| 1 | Vyplnit ceník (Excel pro výrobce) | výrobce / Lakma PL | odesláno 2026-05-05 |
-| 2 | Importovat vyplněný ceník zpět do Airtable | feed projekt | po doručení |
-| 3 | Importovat připravené Heureka kategorie do existujících polí AT | feed projekt | ✅ hotovo 2026-05-05 (142/142, `scripts/import_heureka_categories.py`) |
-| 4 | Manuálně přiřadit Heureka kategorii pro 1014009 (Q POWER privátka) | — | zrušeno, produkt vyřazen z kategorizace |
-| 5 | Webflow CDN integrace pro Foto URL | Honza + web tým | čeká |
-| 6 | Konfigurace dopravy (DELIVERY_ID, DELIVERY_PRICE) | Honza | čeká |
-
----
-
-## Handoff pro další session
-
-- Heureka kategorizace zapsaná do AT (2026-05-05, 142/142).
-- Generátor `scripts/generate_feeds.py` + `scripts/feed/` knihovna postavené, smoke test prošel.
-- 2 default profily (`heureka_general_cz`, `heureka_general_sk`) v `config/profiles/`.
-- AT připravena: `Feed profily` field + `Feed_profile_index` tabulka.
-- Generátor patchuje stav do `Feed_profile_index` po každém běhu — prozatím status `Warning` (0 produktů), důvod chybí ceny.
-- GH workflow `.github/workflows/regenerate_feeds.yml` připravený (cron 4h + workflow_dispatch).
-- AT Automation návod v `docs/at_automation_setup.md`.
-
-## Otevřené blokátory
-
-1. **GitHub repo nezaložen** — čeká na explicitní souhlas Honzy s veřejnou viditelností. Po souhlasu: `gh repo create martin87pokorny/produktovy-feed-sidolux --public --source=. --remote=origin --push`.
-2. **`gh` PAT chybí scope `workflow`** — bez toho nelze pushnout `.github/workflows/`. Refresh: `gh auth refresh -h github.com -s workflow`.
-3. **GitHub Secrets** v repu po jeho vytvoření: `AIRTABLE_TOKEN`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE_NAME`.
-4. **GitHub Pages** zapnout v Settings → Pages → Source: `gh-pages` branch.
-5. **Ceny od výrobce** + **Webflow CDN URL fotek** — bez nich proběhne feed s 0 produkty (status Warning), generátor je tomu připravený.
-6. **AT Automation** s fine-grained PAT podle `docs/at_automation_setup.md`.
-
----
-
-## Fáze 3 — Generátor
-
-`scripts/generate_heureka_feed.py`:
-- Vstup: Airtable + statický config (`config/feed_config.json`)
-- Výstup: `data/output/heureka_cz.xml`, `data/output/heureka_sk.xml`
-- Validace: povinná pole, EAN format, URL format
-- Log: `data/output/feed_log_<timestamp>.txt`
-
-Config struktura (návrh):
-```json
-{
-  "manufacturer": "Lakma",
-  "delivery_date_default": 0,
-  "delivery": [
-    {"id": "CESKA_POSTA", "price": 99},
-    {"id": "ZASILKOVNA", "price": 79},
-    {"id": "PPL", "price": 119}
-  ],
-  "heureka_cpc": null,
-  "params_to_export": ["Vůně", "Objem", "Vhodné povrchy", "Hlavní technologie"]
-}
-```
-
----
-
-## Fáze 4 — Hosting + auto-refresh
-
-- Cron / GitHub Action na regeneraci každé 2-4 hodiny (Heureka zvládá tuto frekvenci na FREE režimu po 4 h, na PPC po 2 h)
-- Hosting feedu: `https://www.sidolux.cz/feed/heureka_cz.xml` (vyžádá web tým)
-- Validace přes Heureka feed-validator po každém deployi
-- Monitoring: log alertů, kdy poslední úspěšná regenerace, kolik produktů ve feedu
+| Fáze | Stav |
+|------|------|
+| 1. Struktura dat v AT | ✅ hotová |
+| 1b. Heureka kategorizace | ✅ zapsaná v AT (142/143) |
+| 2. Doplnění cen + dalších údajů | ⏳ čeká na výrobce |
+| 3. Generátor feedu | ✅ multi-profile knihovna + 2 default profily, end-to-end ověřeno |
+| 4. Hosting + auto-refresh | ✅ GH Action + Pages live |
+| 5. Distribuce odběratelům | ✅ docs/feeds_for_partners.md, AT Automation čeká na napojení |

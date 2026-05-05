@@ -1,0 +1,69 @@
+name: Regenerate feeds
+
+on:
+  schedule:
+    # Každé 4 hodiny (Heureka FREE režim akceptuje min 4h, PPC 2h)
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: 'Profil k regeneraci ("all" nebo konkrétní jméno, např. heureka_general_cz)'
+        required: false
+        default: 'all'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      AIRTABLE_TOKEN: ${{ secrets.AIRTABLE_TOKEN }}
+      AIRTABLE_BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
+      AIRTABLE_TABLE_NAME: ${{ secrets.AIRTABLE_TABLE_NAME }}
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Recreate .env from secrets
+        run: |
+          cat > .env <<EOF
+          AIRTABLE_TOKEN=${AIRTABLE_TOKEN}
+          AIRTABLE_BASE_ID=${AIRTABLE_BASE_ID}
+          AIRTABLE_TABLE_NAME=${AIRTABLE_TABLE_NAME}
+          EOF
+
+      - name: Generate feeds
+        run: |
+          python scripts/generate_feeds.py \
+            --profile "${{ inputs.profile || 'all' }}" \
+            --public-url-base "https://martin87pokorny.github.io/produktovy-feed-sidolux/"
+
+      - name: Build feed-output directory
+        run: |
+          mkdir -p _site
+          cp data/output/*.xml _site/ 2>/dev/null || true
+          cp data/output/feed_index.json _site/ 2>/dev/null || true
+          # Generuj index.html rozcestník
+          python scripts/_build_feed_index_html.py _site/feed_index.json _site/index.html
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          publish_branch: gh-pages
+          keep_files: false
+          commit_message: 'feed regenerate ${{ github.event_name }} ${{ github.sha }}'
+
+      - name: Cleanup .env
+        if: always()
+        run: rm -f .env

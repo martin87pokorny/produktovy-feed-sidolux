@@ -1,0 +1,69 @@
+{
+  "generated_at": "2026-05-05T21:09:06",
+  "rows_total": 143,
+  "excluded": 1,
+  "valid_cz": 142,
+  "valid_sk": 142,
+  "changed_cz": 142,
+  "changed_sk": 142,
+  "validation_cz": {
+    "EXCLUDED": 1,
+    "OK": 142
+  },
+  "validation_sk": {
+    "EXCLUDED": 1,
+    "OK": 142
+  },
+  "rule_sources": {
+    "excluded_product_code": 1,
+    "series:MR. TEPPICH": 3,
+    "keyword:laundry_capsules": 12,
+    "keyword:fabric_softeners": 3,
+    "series:SILUX WC": 3,
+    "series:Sidolux ECO": 6,
+    "series:Sidolux EXPERT": 6,
+    "series:Sidolux M péče o nábytek": 11,
+    "keyword:furniture_cleaner_leather": 2,
+    "series:Sidolux PREMIUM FLOOR CARE": 19,
+    "series:Sidolux PROFESSIONAL": 3,
+    "keyword:bath_kitchen_professional": 7,
+    "keyword:stove_fireplace_cleaner": 1,
+    "keyword:drain_cleaner": 1,
+    "keyword:stain_removers": 3,
+    "keyword:laundry_gels": 2,
+    "series:Sidolux UNIVERSAL": 34,
+    "series:Sidolux WINDOW": 19,
+    "keyword:furniture_polish_silux": 1,
+    "keyword:sponges": 5,
+    "keyword:cloths": 1
+  },
+  "low_confidence": [
+    {
+      "kod_lakma": "1011003",
+      "web_nazev_cz": "SIDOLUX duo na ošetření náhrobních kamenů",
+      "confidence": 0.72,
+      "zdroj_pravidla": "series:Sidolux PROFESSIONAL",
+      "navrh_cz": "Heureka.cz | Drogerie | Čisticí prostředky | Univerzální čisticí prostředky",
+      "navrh_sk": "Heureka.sk | Drogéria | Čistiace prostriedky | Univerzálne čistiace prostriedky",
+      "poznamka": ""
+    },
+    {
+      "kod_lakma": "1011901",
+      "web_nazev_cz": "SIDOLUX Professional na ploché obrazovky a LCD 200 ml",
+      "confidence": 0.72,
+      "zdroj_pravidla": "series:Sidolux PROFESSIONAL",
+      "navrh_cz": "Heureka.cz | Drogerie | Čisticí prostředky | Univerzální čisticí prostředky",
+      "navrh_sk": "Heureka.sk | Drogéria | Čistiace prostriedky | Univerzálne čistiace prostriedky",
+      "poznamka": ""
+    },
+    {
+      "kod_lakma": "1011908",
+      "web_nazev_cz": "SIDOLUX Professional na silné nečistoty 500 ml",
+      "confidence": 0.72,
+      "zdroj_pravidla": "series:Sidolux PROFESSIONAL",
+      "navrh_cz": "Heureka.cz | Drogerie | Čisticí prostředky | Univerzální čisticí prostředky",
+      "navrh_sk": "Heureka.sk | Drogéria | Čistiace prostriedky | Univerzálne čistiace prostriedky",
+      "poznamka": ""
+    }
+  ]
+}

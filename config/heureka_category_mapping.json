@@ -1,0 +1,286 @@
+{
+  "generated_for": "Sidolux / Lakma product feed",
+  "category_sources": {
+    "cz": "https://www.heureka.cz/direct/xml-export/shops/heureka-sekce.xml",
+    "sk": "https://www.heureka.sk/direct/xml-export/shops/heureka-sekce.xml"
+  },
+  "exclude_product_codes": [
+    "1014009"
+  ],
+  "category_keys": {
+    "universal_cleaner": {
+      "cz": "Heureka.cz | Drogerie | Čisticí prostředky | Univerzální čisticí prostředky",
+      "sk": "Heureka.sk | Drogéria | Čistiace prostriedky | Univerzálne čistiace prostriedky"
+    },
+    "eco_cleaner": {
+      "cz": "Heureka.cz | Drogerie | Ekologická domácnost | Ekologické čisticí prostředky",
+      "sk": "Heureka.sk | Drogéria | Ekologická domácnosť | Ekologické čistiace prostriedky"
+    },
+    "floor_cleaner": {
+      "cz": "Heureka.cz | Drogerie | Čisticí prostředky | Čistící prostředky na podlahy",
+      "sk": "Heureka.sk | Drogéria | Čistiace prostriedky | Čistiace prostriedky na podlahy"
+    },
+    "floor_polish": {
+      "cz": "Heureka.cz | Drogerie | Čisticí prostředky | Leštící prostředky | Leštidla na podlahy",
+      "sk": "Heureka.sk | Drogéria | Čistiace prostriedky | Leštiace prostriedky | Leštidlá na podlahy"
+    },
+    "window_cleaner": {
+      "cz": "Heureka.cz | Drogerie | Čisticí prostředky | Čistící prostředky na okna a skla",
+      "sk": "Heureka.sk | Drogéria | Čistiace prostriedky | Čistiace prostriedky na okná a sklá"
+    },
+    "furniture_polish": {
+      "cz": "Heureka.cz | Drogerie | Čisticí prostředky | Leštící prostředky | Leštidla na nábytek a přípravky proti prachu",
+      "sk": "Heureka.sk | Drogéria | Čistiace prostriedky | Leštiace prostriedky | Leštidlá na nábytok a prípravky proti prachu"
+    },
+    "furniture_cleaner": {
+      "cz": "Heureka.cz | Drogerie | Čisticí prostředky | Čistící prostředky na nábytek",
+      "sk": "Heureka.sk | Drogéria | Čistiace prostriedky | Čistiace prostriedky na nábytok"
+    },
+    "bath_kitchen_cleaner": {
+      "cz": "Heureka.cz | Drogerie | Čisticí prostředky | Čisticí prostředky do koupelny a kuchyně",
+      "sk": "Heureka.sk | Drogéria | Čistiace prostriedky | Čistiace prostriedky na kúpeľne a kuchyne"
+    },
+    "drain_cleaner": {
+      "cz": "Heureka.cz | Drogerie | Čisticí prostředky | Čističe odpadu",
+      "sk": "Heureka.sk | Drogéria | Čistiace prostriedky | Čističe odpadu"
+    },
+    "stove_fireplace_cleaner": {
+      "cz": "Heureka.cz | Drogerie | Čisticí prostředky | Čistící přípravky na kamna a krby",
+      "sk": "Heureka.sk | Drogéria | Čistiace prostriedky | Univerzálne čistiace prostriedky"
+    },
+    "carpet_cleaner": {
+      "cz": "Heureka.cz | Drogerie | Čisticí prostředky | Čisticí prostředky na koberce a čalounění",
+      "sk": "Heureka.sk | Drogéria | Čistiace prostriedky | Čistiace prostriedky na koberce a čalúnenie"
+    },
+    "wc_cleaner": {
+      "cz": "Heureka.cz | Drogerie | Čisticí prostředky | Dezinfekční prostředky na WC",
+      "sk": "Heureka.sk | Drogéria | Čistiace prostriedky | Dezinfekčné prostriedky na WC"
+    },
+    "sponges": {
+      "cz": "Heureka.cz | Drogerie | Úklidové pomůcky | Drátěnky a houbičky",
+      "sk": "Heureka.sk | Drogéria | Upratovacie pomôcky | Drôtenky a hubky"
+    },
+    "cloths": {
+      "cz": "Heureka.cz | Drogerie | Úklidové pomůcky | Hadry a utěrky na mytí",
+      "sk": "Heureka.sk | Drogéria | Upratovacie pomôcky | Handry a utierky na umývanie"
+    },
+    "stain_removers": {
+      "cz": "Heureka.cz | Drogerie | Praní prádla | Odstraňovače skvrn",
+      "sk": "Heureka.sk | Drogéria | Pranie bielizne | Odstraňovače škvŕn"
+    },
+    "laundry_gels": {
+      "cz": "Heureka.cz | Drogerie | Praní prádla | Prací prostředky | Prací gely",
+      "sk": "Heureka.sk | Drogéria | Pranie bielizne | Pracie prostriedky | Pracie gély"
+    },
+    "laundry_capsules": {
+      "cz": "Heureka.cz | Drogerie | Praní prádla | Prací prostředky | Prací kapsle a tablety",
+      "sk": "Heureka.sk | Drogéria | Pranie bielizne | Pracie prostriedky | Pracie kapsule a tablety"
+    },
+    "fabric_softeners": {
+      "cz": "Heureka.cz | Drogerie | Praní prádla | Aviváže",
+      "sk": "Heureka.sk | Drogéria | Pranie bielizne | Aviváže"
+    },
+    "laundry_additives": {
+      "cz": "Heureka.cz | Drogerie | Praní prádla | Bělidla, změkčovadla, škroby",
+      "sk": "Heureka.sk | Drogéria | Pranie bielizne | Bielidlá, zmäkčovadlá, škroby"
+    }
+  },
+  "series_defaults": {
+    "Sidolux UNIVERSAL": {
+      "category_key": "universal_cleaner",
+      "confidence": 0.92
+    },
+    "Sidolux ECO": {
+      "category_key": "eco_cleaner",
+      "confidence": 0.9
+    },
+    "Sidolux PREMIUM FLOOR CARE": {
+      "category_key": "floor_cleaner",
+      "confidence": 0.86
+    },
+    "Sidolux EXPERT": {
+      "category_key": "floor_polish",
+      "confidence": 0.9
+    },
+    "Sidolux WINDOW": {
+      "category_key": "window_cleaner",
+      "confidence": 0.95
+    },
+    "Sidolux M péče o nábytek": {
+      "category_key": "furniture_polish",
+      "confidence": 0.9
+    },
+    "Sidolux PROFESSIONAL": {
+      "category_key": "universal_cleaner",
+      "confidence": 0.72
+    },
+    "Sidolux Praní": {
+      "category_key": "laundry_gels",
+      "confidence": 0.72
+    },
+    "PERLUX": {
+      "category_key": "laundry_capsules",
+      "confidence": 0.72
+    },
+    "MR. TEPPICH": {
+      "category_key": "carpet_cleaner",
+      "confidence": 0.95
+    },
+    "SILUX WC": {
+      "category_key": "wc_cleaner",
+      "confidence": 0.95
+    },
+    "Silux": {
+      "category_key": "sponges",
+      "confidence": 0.7
+    }
+  },
+  "keyword_rules": [
+    {
+      "id": "stain_removers",
+      "series": [
+        "Sidolux Praní"
+      ],
+      "contains_any": [
+        "odstraňovač skvrn"
+      ],
+      "category_key": "stain_removers",
+      "confidence": 0.97
+    },
+    {
+      "id": "laundry_capsules",
+      "series": [
+        "Sidolux Praní",
+        "PERLUX"
+      ],
+      "contains_any": [
+        "multicaps",
+        "prací perly",
+        "pracie perly"
+      ],
+      "category_key": "laundry_capsules",
+      "confidence": 0.88
+    },
+    {
+      "id": "laundry_gels",
+      "series": [
+        "Sidolux Praní"
+      ],
+      "contains_any": [
+        "gel white",
+        "gel color",
+        "gel black"
+      ],
+      "category_key": "laundry_gels",
+      "confidence": 0.96
+    },
+    {
+      "id": "fabric_softeners",
+      "series": [
+        "PERLUX"
+      ],
+      "contains_any": [
+        "aviváž",
+        "koncentrovaná aviváž"
+      ],
+      "category_key": "fabric_softeners",
+      "confidence": 0.97
+    },
+    {
+      "id": "laundry_color_renewal",
+      "series": [
+        "Sidolux Praní"
+      ],
+      "contains_any": [
+        "obnovu barev"
+      ],
+      "category_key": "laundry_additives",
+      "confidence": 0.78
+    },
+    {
+      "id": "bath_kitchen_professional",
+      "series": [
+        "Sidolux PROFESSIONAL"
+      ],
+      "contains_any": [
+        "na kuchyně",
+        "na koupelny"
+      ],
+      "category_key": "bath_kitchen_cleaner",
+      "confidence": 0.92
+    },
+    {
+      "id": "drain_cleaner",
+      "series": [
+        "Sidolux PROFESSIONAL"
+      ],
+      "contains_any": [
+        "odpadů",
+        "potrubí"
+      ],
+      "category_key": "drain_cleaner",
+      "confidence": 0.97
+    },
+    {
+      "id": "stove_fireplace_cleaner",
+      "series": [
+        "Sidolux PROFESSIONAL"
+      ],
+      "contains_any": [
+        "připáleniny",
+        "krbová skla"
+      ],
+      "category_key": "stove_fireplace_cleaner",
+      "confidence": 0.86,
+      "note": "SK strom nemá odpovídající drogerii pro kamna/krby, proto je SK fallback univerzální čistič."
+    },
+    {
+      "id": "furniture_cleaner_leather",
+      "series": [
+        "Sidolux M péče o nábytek",
+        "Silux"
+      ],
+      "contains_any": [
+        "rychločistič kůže",
+        "antistatic spray"
+      ],
+      "category_key": "furniture_cleaner",
+      "confidence": 0.82
+    },
+    {
+      "id": "furniture_polish_silux",
+      "series": [
+        "Silux"
+      ],
+      "contains_any": [
+        "spray na nábytek"
+      ],
+      "category_key": "furniture_polish",
+      "confidence": 0.9
+    },
+    {
+      "id": "cloths",
+      "series": [
+        "Silux"
+      ],
+      "contains_any": [
+        "utěrka",
+        "mikrovlákno"
+      ],
+      "category_key": "cloths",
+      "confidence": 0.95
+    },
+    {
+      "id": "sponges",
+      "series": [
+        "Silux"
+      ],
+      "contains_any": [
+        "houbička",
+        "houbičky"
+      ],
+      "category_key": "sponges",
+      "confidence": 0.95
+    }
+  ]
+}

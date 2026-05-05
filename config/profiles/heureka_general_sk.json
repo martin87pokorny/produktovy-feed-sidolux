@@ -1,0 +1,44 @@
+{
+  "extends": null,
+  "output_filename": "heureka_general_sk.xml",
+  "language": "sk",
+  "currency": "EUR",
+  "vat_default": 23,
+  "root_element": "SHOP",
+  "item_element": "SHOPITEM",
+  "filter": {
+    "pridat_do_feedu": "Ano",
+    "feed_profil_match": true,
+    "require_fields": [
+      "Kód Lakma",
+      "Web název SK",
+      "URL produktu SK",
+      "Cena EUR doporučená",
+      "Heureka kategorie SK"
+    ],
+    "ean_must_be_valid": true
+  },
+  "tags": [
+    { "tag": "ITEM_ID",       "source": "Kód Lakma",                "required": true },
+    { "tag": "PRODUCTNAME",   "source": "Web název SK",             "required": true },
+    { "tag": "URL",           "source": "URL produktu SK",          "required": true },
+    { "tag": "PRICE_VAT",     "source": "Cena EUR doporučená",      "format": "decimal", "required": true },
+    { "tag": "VAT",           "constant": "23%" },
+    { "tag": "CATEGORYTEXT",  "source": "Heureka kategorie SK" },
+    { "tag": "DESCRIPTION",   "source": "Web popis SK",             "transform": "html_to_plain", "wrap_cdata": true },
+    { "tag": "EAN",           "source": "EAN KS",                   "skip_if": "NA" },
+    { "tag": "MANUFACTURER",  "constant": "Lakma" },
+    { "tag": "ITEMGROUP_ID",  "source": "Itemgroup ID" },
+    { "tag": "DELIVERY_DATE", "constant": "0" },
+    { "tag": "IMGURL",        "source": "Foto 800×800",             "transform": "first_attachment_url" },
+    { "tag": "IMGURL_ALTERNATIVE", "source": "Galerie produktu",    "transform": "all_attachment_urls", "repeat": true }
+  ],
+  "params": [
+    { "name": "Vôňa",               "source": "Vůně" },
+    { "name": "Objem",              "source": "Objem" },
+    { "name": "Vhodné povrchy",     "source": "Vhodné povrchy" },
+    { "name": "Hlavná technológia", "source": "Hlavní technologie" }
+  ],
+  "delivery": [],
+  "extras": []
+}

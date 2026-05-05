@@ -1,0 +1,37 @@
+# Tajné údaje a tokeny
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.venv/
+venv/
+
+# Vygenerované feedy a logy (mohou se regenerovat)
+data/output/*.xml
+data/output/*.log
+
+# Excel temp / lock soubory (Windows)
+~$*.xlsx
+~$*.xlsm
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Vyplněné excely od výrobce — verzování řešíme jinak (cloud share),
+# v repo je nepotřebujeme
+data/exchange/cenik_pro_vyrobce_VYPLNENY_*.xlsx

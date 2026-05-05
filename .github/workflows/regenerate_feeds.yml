@@ -68,6 +68,30 @@ jobs:
           keep_files: false
           commit_message: 'feed regenerate ${{ github.event_name }} ${{ github.sha }}'
 
+      - name: Notify AT on failure
+        if: failure()
+        env:
+          FAILED_STEP: ${{ github.action }}
+        run: python scripts/_notify_at_failure.py
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "# Regenerate feeds — ${{ job.status }}"
+            echo ""
+            echo "- Trigger: \`${{ github.event_name }}\`"
+            echo "- Profile input: \`${{ inputs.profile || 'all (cron)' }}\`"
+            echo "- SHA: \`${{ github.sha }}\`"
+            echo ""
+            if [ -f data/output/feed_index.json ]; then
+              echo "## Feed index"
+              echo '```json'
+              cat data/output/feed_index.json
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Cleanup .env
         if: always()
         run: rm -f .env

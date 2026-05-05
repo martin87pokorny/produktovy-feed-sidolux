@@ -35,3 +35,4 @@ desktop.ini
 # Vyplněné excely od výrobce — verzování řešíme jinak (cloud share),
 # v repo je nepotřebujeme
 data/exchange/cenik_pro_vyrobce_VYPLNENY_*.xlsx
+data/exchange/_TEST_*.xlsx

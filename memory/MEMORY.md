@@ -4,6 +4,18 @@ Krátký kontextový log pro Claude Code, ať při příští session nemusí do
 
 ---
 
+## 2026-05-06 — Sprint 1: importer ceníku + monitoring + partner docs
+
+- `scripts/import_pricing.py` — read Excel ceníku, počítá cenu s DPH = bez DPH × (1+sazba/100), match na Kód Lakma, default live, batch 10, dry-run preview, retry 429. Ověřeno test fixture (5000013 detekoval beze změny, 1010166 nově) — fixture v `_TEST_*.xlsx` patternu v `.gitignore`.
+- `scripts/_notify_at_failure.py` + workflow step `if: failure()` — při crashi workflow nastaví všechny `Feed_profile_index` záznamy na status Error s odkazem na GH Actions run.
+- Workflow Job summary — kdykoli `if: always()` zapíše do `$GITHUB_STEP_SUMMARY` přehled běhu + JSON feed_index.
+- `docs/feeds_for_partners.md` — dokumentace pro B2B odběratele (URL, schema, refresh, custom profil request).
+- Rozhodnutí (z konverzace 2026-05-06):
+  - `<DELIVERY>` blok ve feedu zůstane prázdný (Sidolux není e-shop, paletová přeprava se řeší mimo).
+  - SK PARAM hodnoty zatím v češtině (kosmetické, ne-blokující).
+  - Testovací produkt 5000013 zůstává ve feedu jako sample.
+  - Custom doména `feed.sidolux.cz` až po MVP.
+
 ## 2026-05-06 — Generátor end-to-end ověřený
 
 - GH repo `martin87pokorny/produktovy-feed-sidolux` (public), GH Pages enabled na `gh-pages` branch.

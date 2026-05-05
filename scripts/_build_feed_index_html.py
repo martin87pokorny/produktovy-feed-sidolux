@@ -31,6 +31,20 @@ idx = json.loads(idx_path.read_text(encoding='utf-8'))
 generated = idx.get('generated_at', '')
 feeds = idx.get('feeds', [])
 
+# Inline SVG logo — když je SVG načteno přes <img>, nemá přístup k webfont
+# parent dokumentu, takže <text> elementy fallbackují na sans-serif a glyph
+# offsety v <tspan x="..."> se rozjedou. Inline SVG dědí Parkinsans z bodyho
+# CSS a renderuje se správně.
+ROOT = Path(__file__).resolve().parent.parent
+LOGO_SVG_PATH = ROOT / 'data' / 'assets' / 'gby_logo_goodboys.svg'
+logo_svg = ''
+if LOGO_SVG_PATH.exists():
+    raw = LOGO_SVG_PATH.read_text(encoding='utf-8')
+    # Odstranit XML declaration, aby šel SVG inline-nout do HTML
+    if raw.startswith('<?xml'):
+        raw = raw.split('?>', 1)[1].lstrip()
+    logo_svg = raw
+
 rows = []
 for f in feeds:
     rows.append(
@@ -121,7 +135,7 @@ html = f'''<!doctype html>
     align-items: center;
     text-decoration: none;
   }}
-  .footer-brand img {{
+  .footer-brand svg {{
     height: 38px;
     width: auto;
     display: block;
@@ -165,7 +179,7 @@ html = f'''<!doctype html>
 
   <footer class="footer">
     <a class="footer-brand" href="https://gby.agency" aria-label="Good Boys Agency">
-      <img src="assets/gby_logo_goodboys.svg" alt="Good Boys Agency">
+      {logo_svg}
     </a>
     <div class="footer-meta">
       <span class="label">Vytvořilo</span>
